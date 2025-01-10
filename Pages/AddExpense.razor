@@ -29,25 +29,23 @@
 @code {
     private Expense newExpense = new Expense();
 
-        private async Task SaveExpense()
+    private async Task SaveExpense()
+    {
+        try
         {
-            try
+            var response = await Http.PostAsJsonAsync("api/expenses", newExpense);
+            if (response.IsSuccessStatusCode)
             {
-                var response = await Http.PostAsJsonAsync("api/expenses", newExpense);
-                if (response.IsSuccessStatusCode)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-                else
-                {
-                    Console.WriteLine($"Error: {response.ReasonPhrase}");
-                }
+                NavigationManager.NavigateTo("/expenselist");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Exception: {ex.Message}");
+                Console.WriteLine($"Error: {response.ReasonPhrase}");
             }
-        
         }
-
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+        }
+    }
 }

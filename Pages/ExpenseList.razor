@@ -40,6 +40,8 @@
     {
         try
         {
+            // Hardcoded API base address
+            Http.BaseAddress = new Uri("https://localhost:7192");
             expenses = await Http.GetFromJsonAsync<List<Expense>>("api/expenses");
         }
         catch (Exception ex)
