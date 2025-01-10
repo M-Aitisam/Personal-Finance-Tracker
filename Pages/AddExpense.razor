@@ -1,0 +1,53 @@
+﻿@page "/add-expense"
+@layout MainLayout
+@inject NavigationManager NavigationManager
+@using Personal_Finance_Tracker.Data
+@inject HttpClient Http
+
+<h3>Add Expense</h3>
+
+<form @onsubmit="SaveExpense">
+    <div>
+        <label>Description</label>
+        <input type="text" @bind="newExpense.Description" required />
+    </div>
+    <div>
+        <label>Amount</label>
+        <input type="number" @bind="newExpense.Amount" required />
+    </div>
+    <div>
+        <label>Category</label>
+        <input type="text" @bind="newExpense.Category" required />
+    </div>
+    <div>
+        <label>Date</label>
+        <input type="date" @bind="newExpense.Date" required />
+    </div>
+    <button type="button" @onclick="SaveExpense">Save</button>
+</form>
+
+@code {
+    private Expense newExpense = new Expense();
+
+        private async Task SaveExpense()
+        {
+            try
+            {
+                var response = await Http.PostAsJsonAsync("api/expenses", newExpense);
+                if (response.IsSuccessStatusCode)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    Console.WriteLine($"Error: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+        
+        }
+
+}

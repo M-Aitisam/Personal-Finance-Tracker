@@ -1,0 +1,50 @@
+﻿@page "/expenselist"
+@layout MainLayout
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@using Personal_Finance_Tracker.Data
+
+<h3>Expenses</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expense in expenses)
+        {
+            <tr>
+                <td>@expense.Description</td>
+                <td>@expense.Amount</td>
+                <td>@expense.Category</td>
+                <td>@expense.Date.ToShortDateString()</td>
+                <td>
+                    <a href="editexpense/@expense.ExpenseId">Edit</a> |
+                    <a href="deleteexpense/@expense.ExpenseId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Expense> expenses = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            expenses = await Http.GetFromJsonAsync<List<Expense>>("api/expenses");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
